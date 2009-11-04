@@ -1,0 +1,10 @@
+{% load item_tags %}
+<html>
+<body>
+<div id="list">
+{% for item in items %}
+	{% item_show item %}
+{% endfor %}
+</div>
+</body>
+</html>
