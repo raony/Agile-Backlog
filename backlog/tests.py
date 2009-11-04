@@ -9,7 +9,8 @@ from django.test import TestCase
 from django.db import IntegrityError
 from models import *
 from django.core import serializers
-
+from django.template.loader import get_template
+from django.template.context import Context
 
 class ItemTest(TestCase):
     def setUp(self):
@@ -65,5 +66,16 @@ class ItemTest(TestCase):
         response = self.client.get(self.i1.get_absolute_url())
         self.failUnlessEqual(200, response.status_code)
         self.failUnlessEqual(serializers.serialize('json', [self.i1,]),response.content)
-    
+
+class ListViewTest(TestCase):
+    def test_item_template(self):
+        """
+        There is a template for item that shows its summary and description in separated divs.
+        """
+        template = get_template('item.html')
+        
+        result = template.render(Context({'item' : Item(id=4, summary='item1', description='description1')}))
+        self.failUnlessEqual('<div id="item_4"><div id="summary">item1</div><div id="description">description1</div></div>', 
+                             result)
+        
     
