@@ -17,8 +17,8 @@ def item(request, id):
     return HttpResponse(serializers.serialize('json', Item.objects.filter(id=id)))
 
 def sort(request):
-    list = request.POST.getlist('item')
-    
+    list = [int(x) for x in request.POST.getlist('item[]')]
+    print list
     Item.objects.filter(id__in=list).update(priority=None)
     for i, id in enumerate(list):
         item = Item.objects.get(id=id)

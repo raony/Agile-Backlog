@@ -63,7 +63,7 @@ class ItemTest(TestCase):
         """
         A http POST to /item/sort/ with ids in data should change its priority.
         """
-        response = self.client.post('/backlog/item/sort/', {'item': [3,2,1]})
+        response = self.client.post('/backlog/item/sort/', {'item[]': [3,2,1]})
         self.failUnlessEqual(self.i3, Item.objects.all()[0])
         self.failUnlessEqual(self.i2, Item.objects.all()[1])
         self.failUnlessEqual(self.i1, Item.objects.all()[2])
