@@ -15,7 +15,8 @@
 <script type="text/javascript">
 	$(function() {
 		$("#sortable").sortable({
-			placeholder: 'ui-state-highlight'
+			placeholder: 'ui-state-highlight',
+			update: function(event, ui) { alert($("#sortable").sortable('serialize'));  }
 		});
 		$("#sortable").disableSelection();
 	});
@@ -25,7 +26,7 @@
 <div class="demo">
 <ul id="sortable">
 	{% for item in items %}
-		<li class="ui-state-default">{% item_show item %}</li>
+		<li class="ui-state-default" id="item_{{ item.id }}">{% item_show item %}</li>
 	{% endfor %}
 </ul>
 </div>

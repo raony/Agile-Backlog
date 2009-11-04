@@ -48,7 +48,7 @@ class ItemTest(TestCase):
         self.failUnlessEqual(self.i1, Item.objects.all()[1])
         self.failUnlessEqual(self.i3, Item.objects.all()[2])
     
-    def test_priority_up(self):
+    def test_priority_http_up(self):
         """
         A http POST to /item/id/up should increase its priority.
         """
@@ -58,6 +58,15 @@ class ItemTest(TestCase):
         self.failUnlessEqual(self.i2, Item.objects.all()[0])
         self.failUnlessEqual(self.i1, Item.objects.all()[1])
         self.failUnlessEqual(self.i3, Item.objects.all()[2])
+    
+    def test_priority_http_set(self):
+        """
+        A http POST to /item/sort/ with ids in data should change its priority.
+        """
+        response = self.client.post('/backlog/item/sort/', {'item': [3,2,1]})
+        self.failUnlessEqual(self.i3, Item.objects.all()[0])
+        self.failUnlessEqual(self.i2, Item.objects.all()[1])
+        self.failUnlessEqual(self.i1, Item.objects.all()[2])
     
     def test_item_url(self):
         """
