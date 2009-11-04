@@ -89,6 +89,8 @@ class ListViewTest(TestCase):
         
         response = self.client.get('/backlog/list_view/')
         self.failUnless('items' in response.context)
+        self.failUnlessEqual(3, len(response.context['items']))
+        self.failUnless(all([i in response.context['items'] for i in [i1, i2, i3]]))
         self.assertTemplateUsed(response, 'item_list.html')
         
         
