@@ -77,5 +77,19 @@ class ListViewTest(TestCase):
         result = template.render(Context({'item' : Item(id=4, summary='item1', description='description1')}))
         self.failUnlessEqual('<div id="item_4"><div id="summary">item1</div><div id="description">description1</div></div>', 
                              result)
+    
+    def test_item_list(self):
+        """
+        A http GET to /backlog/list_view should load the item_list.html template with all
+        the items in the base.
+        """
+        i1 = Item.objects.create(summary='item1', priority=3)
+        i2 = Item.objects.create(summary='item2', priority=1)
+        i3 = Item.objects.create(summary='item3', priority=2)
+        
+        response = self.client.get('/backlog/list_view/')
+        self.failUnless('items' in response.context)
+        self.assertTemplateUsed(response, 'item_list.html')
+        
         
     
