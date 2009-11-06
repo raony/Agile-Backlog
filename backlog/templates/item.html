@@ -1,1 +1,2 @@
-<div id="item_{{ item.id }}"><div id="summary">{{ item.summary }}</div><div id="description">{{ item.description }}</div></div>
+{% load item_tags %}
+<div id="item_{{ item.id }}" ><div class="summary" style="position: relative; height: {{ item.complexity|complexity_height }}">{{ item.summary }}<a class="show_hide" style="position: absolute; right: 80px" href=".">mostrar detalhes</a> <span class="complexity" style="position: absolute; top: 0px; right: 15px; color: red; font-size: {{ item.complexity|complexity_size }}; font-weight: {{ item.complexity }}">{{ item.complexity }}</span></div><div class="description" style="font-weight: normal; color: black; font-size: medium; width: 80%;">{{ item.description|truncatewords:50 }}</div></div>

@@ -6,6 +6,7 @@ class Item(models.Model):
     priority = models.PositiveIntegerField(unique=True, null=True)
     summary = models.CharField(max_length=250)
     description = models.TextField(null=True)
+    complexity = models.PositiveIntegerField(default=2)
 
     def __unicode__(self):
         return self.summary
