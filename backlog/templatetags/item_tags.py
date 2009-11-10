@@ -8,7 +8,7 @@ def item_show(item):
 
 @register.filter
 def complexity_size(val):
-    return 15 + int(val * 0.22)
+    return min(15 + int(val * 0.22), 23)
 
 @register.filter
 def complexity_height(val):
