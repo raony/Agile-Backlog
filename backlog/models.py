@@ -5,6 +5,8 @@ class Project(models.Model):
     name = models.CharField(max_length=250)
     vision_statement = models.TextField(null=True, blank=True)
     
+    
+    
 class Sprint(models.Model):
     goal = models.TextField(null=True, blank=True)
     number = models.PositiveSmallIntegerField(unique=True)

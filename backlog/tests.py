@@ -12,6 +12,8 @@ from django.core import serializers
 from django.template.loader import get_template
 from django.template.context import Context
 
+from datetime import timedelta
+
 class ItemTest(TestCase):
     def setUp(self):
         self.i1 = Item.objects.create(summary='item1', priority=3)
@@ -102,7 +104,20 @@ class ListViewTest(TestCase):
         self.failUnless(all([i in response.context['items'] for i in [i1, i2, i3]]))
         self.assertTemplateUsed(response, 'item_list.html')
     
-    
+class ProjectTest(TestCase):
+    def test_plan(self):
+        """
+        Each sprint should be created whenever there is still backlog items left until
+        a maximum. It should consider a velocity parameter and a duration parameter.
+        """
+        target = Project.objects.create(name='test project')
+        for i in range(10):
+            Item.objects.create(project=target, summary='item%d'%i, complexity=i%6 or 1)
+        
+        result = target.plan(7, timedelta(30), 3)
+        
+        
+        
         
         
     
