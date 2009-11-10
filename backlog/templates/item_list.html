@@ -8,8 +8,9 @@
 <style type="text/css">
 	body{font:normal 12px Verdana, Arial, Helvetica, sans-serif;color:#3a3a3a;}
 	#backlogagile{width:70%;}
-	#sortable { list-style-type: none; margin: 10px 0; padding: 0;}
-	#sortable li { margin-bottom: 3px; padding: 10px; cursor: move;position:relative;}
+	.sortable { list-style-type: none; margin: 10px 0; padding: 0;}
+	.sortable li{ margin-bottom: 3px; padding: 10px; cursor: move;position:relative;}
+	.sortable.odd li{background:#ebebeb;}
 	.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
 	
 	.ui-state-default, .ui-widget-content .ui-state-default { border: 1px solid #cbc7bd; background: #f8f7f6; }
@@ -25,15 +26,16 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$("#sortable").sortable({
+	$(".sortable").sortable({
 		axis: 'y',
 		opacity: 0.7,
+		connectWith: '.sortable',
 		placeholder: 'ui-state-highlight',
 		update: function(event, ui) {
-			$.post("{% url item_sort %}", {'item[]': $("#sortable").sortable('toArray')});
+			$.post("{% url item_sort %}", {'item[]': $(".sortable").sortable('toArray')});
 		}
-	});
-	$("#sortable").disableSelection();
+	}).disableSelection();
+
 	$(".description").hide();
 	
 	$(".toggledescription").click(function() {
@@ -53,11 +55,17 @@ $(document).ready(function() {
 </head>
 <body>
 <div id="backlogagile">
-<ul id="sortable">
+<ul id="listaum" class="sortable odd">
 	{% for item in items %}
 		<li class="ui-state-default" id="{{ item.id }}">{% item_show item %}</li>
 	{% endfor %}
 </ul>
+<ul id="listadois" class="sortable even">
+	{% for item in items %}
+		<li class="ui-state-default" id="{{ item.id }}">{% item_show item %}</li>
+	{% endfor %}
+</ul>
+
 </div>
 </body>
 </html>
