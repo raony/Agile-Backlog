@@ -18,7 +18,6 @@ def item(request, id):
 
 def sort(request):
     list = [int(x) for x in request.POST.getlist('item[]')]
-    print list
     Item.objects.filter(id__in=list).update(priority=None)
     for i, id in enumerate(list):
         item = Item.objects.get(id=id)
