@@ -1,14 +1,16 @@
 {% load item_tags %}
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <script type="text/javascript" src="{{ MEDIA_URL }}backlog/js/jquery-1.3.2.min.js"></script>
 
 <script type="text/javascript" src="{{ MEDIA_URL }}backlog/js/jquery-ui-1.7.2.custom.min.js"></script>
 <style type="text/css">
 	body{font:normal 12px Verdana, Arial, Helvetica, sans-serif;color:#3a3a3a;}
-	#backlogagile{width:70%;}
-	.sortable { list-style-type: none; margin: 10px 0; padding: 0;}
+	#backlogagile{width:70%;margin:0 auto;}
+	.sortable { list-style-type: none; margin: 10px 0; padding: 0; position:relative;}
 	.sortable li{ margin-bottom: 3px; padding: 10px; cursor: move;position:relative;}
 	.sortable.odd li{background:#ebebeb;}
 	.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
@@ -22,6 +24,7 @@
 	.complexity{position:absolute;right:60px;top:11px;margin:0;font-weight:700;}
 	h2{margin:0;font-size:13px;}
 	p{margin-bottom:0;}
+	h1{font-size:16px;margin:16px 0 0 10px;}
 </style>
 
 <script type="text/javascript">
@@ -51,21 +54,43 @@ $(document).ready(function() {
 		});
 	});
 });
+
+$(window).scroll(function() {
+	if (isBottom()) {
+		alert("chegou no fim.");
+	}
+});
+
+function isBottom() {
+	var scr;
+	var height = $(document).height() - $(window).height() - 50;
+
+	if (navigator.appName == "Microsoft Internet Explorer") {
+		scr = document.body.scrollTop;
+	} else {
+		scr = window.pageYOffset;
+	}
+	if (scr >= height) {
+	    return true;
+	}
+}
 </script>
 </head>
 <body>
 <div id="backlogagile">
-<ul id="listaum" class="sortable odd">
-	{% for item in items %}
-		<li class="ui-state-default" id="{{ item.id }}">{% item_show item %}</li>
-	{% endfor %}
-</ul>
-<ul id="listadois" class="sortable even">
-	{% for item in items %}
-		<li class="ui-state-default" id="{{ item.id }}">{% item_show item %}</li>
-	{% endfor %}
-</ul>
+	<h1>Sprint 1</h1>
+	<ul class="sortable odd">
+		{% for item in items %}
+			<li class="ui-state-default" id="{{ item.id }}">{% item_show item %}</li>
+		{% endfor %}
+	</ul>
 
+	<h1>Sprint 2</h1>
+	<ul class="sortable even">
+		{% for item in items %}
+			<li class="ui-state-default" id="{{ item.id }}">{% item_show item %}</li>
+		{% endfor %}
+	</ul>
 </div>
 </body>
 </html>
