@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.urlresolvers import reverse
 # Create your models here.
 class Project(models.Model):
     name = models.CharField(max_length=250)
@@ -9,9 +9,8 @@ class Project(models.Model):
     def __unicode__(self):
         return self.name
     
-    @models.permalink
     def get_absolute_url(self):
-        return ('project_plan', [self.slug])
+        return 'http://localhost:8000%s'%reverse('project_plan', kwargs={'slug': self.slug})
     
     def plan(self, base_velocity, base_date, timedelta, max_number=None):
         if self.sprints.count():
@@ -98,9 +97,8 @@ class Item(models.Model):
         prev.priority = priority
         prev.save()
     
-    @models.permalink
     def get_absolute_url(self):
-        return ('item_view', [str(self.id)])
+        return 'http://localhost:8000%s'%reverse('item_view', kwargs={'id': self.id})
     
     class Meta:
         ordering = ['priority',]
