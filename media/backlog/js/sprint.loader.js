@@ -17,7 +17,7 @@ function loadSprints(offset, number) {
 	pai = this
 	$.each(this.sprints, function(i, sprint) {
 		if (i < number) {
-			html = '<h1>Sprint ' + sprint.fields.number + ' - ' + sprint.fields.velocity + '</h1>';
+			html = '<h1>Sprint ' + sprint.fields.number + ' - ' + sprint.fields.velocity + ' </h1>';
 			html += '<ul class="sortable odd" id="sprint_' + sprint.pk + '"></ul>';
 			pai.project.ui.append(html);
 			sprint.ui = $('#sprint_' + sprint.pk);
@@ -28,13 +28,21 @@ function loadSprints(offset, number) {
 				connectWith: '.sortable',
 				placeholder: 'ui-state-highlight',
 				update: function(event, ui) {
-					$.post('/backlog/sprint/' + sprint.pk + '/', {'item[]': $(this).sortable('toArray')},
-							function(data, textStatus) {
-						for (id in data) {
-							reload(id);
+					achou = false;
+					for (z = 0; z < this.childNodes.length; z++) {
+						if (this.childNodes[z] == ui.item[0]) {
+							achou = true;
+							break;
 						}
-					}, 'json');
-					
+					}
+					if (achou) {
+						$.post('/backlog/sprint/' + sprint.pk + '/', {'item[]': $(this).sortable('toArray')},
+								function(data, textStatus) {
+							for (w = 0; w < data.length; w++) {
+								reload(data[w]);
+							}
+						}, 'json');
+					}
 				}
 			}).disableSelection();
 			

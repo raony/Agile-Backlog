@@ -74,21 +74,32 @@ class Sprint(models.Model):
         except Sprint.DoesNotExist:
             next_sprint = None
         
-        resized = not first
+        resized = False
         while current > self.velocity:
             resized = True
             last = self.items.order_by('-priority').all()[0]
-            last.sprint = next_sprint
-            last.save()
+            
+            nsp_items = list(Item.objects.filter(sprint=next_sprint))
+            Item.objects.filter(sprint=next_sprint).update(priority=None)
+            nsp_items = [last] + nsp_items
+            for i, item in enumerate(nsp_items):
+                item.priority = i+1
+                item.sprint = next_sprint
+                item.save()
             current = self.items.all().aggregate(total = models.Sum('complexity'))['total'] or 0
         
         if resized:
             spread = [self.id]
             if next_sprint:
-                return spread + next_sprint.resize(False)
+                ar = spread + next_sprint.resize(False)
+                if first:
+                    print ar
+                return ar
             else:
                 return spread + [-1]
-        else:
+        elif not first:
+            return [self.id]
+        else:            
             return []
     
     class Meta:
