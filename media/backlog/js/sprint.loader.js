@@ -15,26 +15,27 @@ function loader(id) {
 
 function loadSprints(offset, number) {
 	pai = this
-	$.each(this.sprints, function(i, item) {
+	$.each(this.sprints, function(i, sprint) {
 		if (i < number) {
-			$.getJSON('/backlog/sprint/' + item.id + '/',
+			$.getJSON('/backlog/sprint/' + sprint.pk + '/',
 				function(data) {
 					html = '<h1>Sprint ' + data[0].pk + '</h1>';
 					html += '<ul class="sortable odd" id="sprint_' + data[0].pk + '"></ul>';
-					pai.project.ui.append(html)
-					item.ui = $('#sprint_' + data[0].pk)
-					//for (item in data[1]) {
-					//	html += '<li class="ui-state-default" id="' + item.pk + '">' + {% item_show item %} + '</li>'
-					//}
+					pai.project.ui.append(html);
+					sprint.ui = $('#sprint_' + data[0].pk);
+					sprint.items = data.slice(1)
+					$.each(sprint.items, function(i, item) {
+						sprint.ui.append('<li class="ui-state-default" id="' + item.pk + '"></li>');
+						item.ui = $('#' + item.pk);
+						item.ui.load('/backlog/item/' + item.pk + '/view/');
 						
+					});
 				});
-			pai.project.ui.
 		}
 	});
 }
 
-function sprintHTML(sprint) {
-	sprint = new Object;
-	
-	
-}
+//function moveItem(item, ) {
+//	this.sprints = 
+//}
+

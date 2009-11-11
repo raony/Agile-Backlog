@@ -8,6 +8,10 @@ from models import *
 def item_view(request, id):
     return HttpResponse(serializers.serialize('json', Item.objects.filter(id=id)))
 
+def item_html_view(request, id):
+    return render_to_response('item.html', {'item': Item.objects.get(id=id),},
+                              context_instance=RequestContext(request))
+
 def sprint_view(request, id):
     try:
         t_sprint = Sprint.objects.get(id=id)

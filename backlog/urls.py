@@ -7,6 +7,7 @@ from django.conf.urls.defaults import *
 urlpatterns = patterns('',
     # Example:
     url(r'^item/(?P<id>\d+)/$', 'backlog.views.item_view', name='item_view'),
+    url(r'^item/(?P<id>\d+)/view/$', 'backlog.views.item_html_view', name='item_html_view'),
     
     url(r'^sprint/(?P<id>\d+)/$', 'backlog.views.sprint_view', name='sprint_view'),
     
