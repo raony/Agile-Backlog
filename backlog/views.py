@@ -21,7 +21,6 @@ def sprint(request, id):
         
         for i, id in enumerate(list):
             item = Item.objects.get(id=id)
-            print '%s = %s - %s'%(unicode(item), unicode(item.priority), unicode(item.sprint))
             item.priority = i+1
             item.sprint = t_sprint
             item.save()
