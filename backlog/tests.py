@@ -33,42 +33,15 @@ class ItemTest(TestCase):
         """
         No two backlog items should have the same priority.
         """
-        i4 = Item.objects.create(summary='item4', priority=4)
+        project = Project.objects.create(name='proj1', slug='proj1')
+        sprint = Sprint.objects.create(number=1, project=project)
+        
+        i4 = Item.objects.create(summary='item4', priority=4, sprint=sprint)
         try:            
-            i5 = Item.objects.create(summary='item5', priority=4)
+            i5 = Item.objects.create(summary='item5', priority=4, sprint=sprint)
             self.fail('an exception should be raised.')
         except IntegrityError:
             pass
-    
-    def test_priority_up(self):
-        """
-        item.up() should switch its order with the immediately superior.
-        """
-        self.i1.up()
-        
-        self.failUnlessEqual(self.i2, Item.objects.all()[0])
-        self.failUnlessEqual(self.i1, Item.objects.all()[1])
-        self.failUnlessEqual(self.i3, Item.objects.all()[2])
-    
-    def test_priority_http_up(self):
-        """
-        A http POST to /item/id/up should increase its priority.
-        """
-        response = self.client.post('/backlog/item/%d/up/'%self.i1.id)
-        self.failUnlessEqual(200, response.status_code)
-        
-        self.failUnlessEqual(self.i2, Item.objects.all()[0])
-        self.failUnlessEqual(self.i1, Item.objects.all()[1])
-        self.failUnlessEqual(self.i3, Item.objects.all()[2])
-    
-    def test_priority_http_set(self):
-        """
-        A http POST to /item/sort/ with ids in data should change its priority.
-        """
-        response = self.client.post('/backlog/item/sort/', {'item[]': [3,2,1]})
-        self.failUnlessEqual(self.i3, Item.objects.all()[0])
-        self.failUnlessEqual(self.i2, Item.objects.all()[1])
-        self.failUnlessEqual(self.i1, Item.objects.all()[2])
     
     def test_item_url(self):
         """
@@ -78,6 +51,26 @@ class ItemTest(TestCase):
         self.failUnlessEqual(200, response.status_code)
         self.failUnlessEqual(serializers.serialize('json', [self.i1,]),response.content)
 
+class SprintTest(TestCase):
+    def setUp(self):
+        self.project = Project.objects.create(name='proj1', slug='proj1')
+        self.i1 = Item.objects.create(summary='item1', priority=3, project=self.project)
+        self.i2 = Item.objects.create(summary='item2', priority=1, project=self.project)
+        self.i3 = Item.objects.create(summary='item3', priority=2, project=self.project)
+        
+    def test_http_set(self):
+        """
+        A http POST to /sprint/<number>/sort/ with item ids in data should 
+        set the sprint backlog.
+        """
+        target = Sprint.objects.create(project=self.project, number=1)
+        response = self.client.post('/backlog/sprint/%d/'%target.id, {'item[]': [self.i3.id,
+                                                                       self.i2.id,
+                                                                       self.i1.id]})
+        self.failUnlessEqual(200, response.status_code)
+        self.failUnlessEqual(self.i3, target.items.all()[0])
+        self.failUnlessEqual(self.i2, target.items.all()[1])
+        self.failUnlessEqual(self.i1, target.items.all()[2])
 class ListViewTest(TestCase):
 #    def test_item_template(self):
 #        """
@@ -105,7 +98,7 @@ class ProjectTest(TestCase):
         
         target.plan(7, now, delta, 3)
         
-        self.failUnlessEqual('/backlog/project/%s/plan/'%target.slug, target.get_absolute_url())
+#        self.failUnlessEqual('/backlog/project/%s/plan/'%target.slug, target.get_absolute_url())
         
         response = self.client.get(target.get_absolute_url())
         self.failUnlessEqual(200, response.status_code)

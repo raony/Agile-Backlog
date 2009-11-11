@@ -51,7 +51,7 @@ class Project(models.Model):
     
 class Sprint(models.Model):
     goal = models.TextField(null=True, blank=True)
-    number = models.PositiveSmallIntegerField(unique=True)
+    number = models.PositiveSmallIntegerField()
     deadline = models.DateTimeField(null=True, blank=True)
     velocity = models.PositiveIntegerField(null=True, blank=True)
     
@@ -66,9 +66,10 @@ class Sprint(models.Model):
     
     class Meta:
         ordering = ['number',]
+        unique_together = (('number', 'project'),)
 
 class Item(models.Model):
-    priority = models.PositiveIntegerField(unique=True, null=True)
+    priority = models.PositiveIntegerField(null=True)
     summary = models.CharField(max_length=250)
     description = models.TextField(null=True, blank=True)
     complexity = models.PositiveIntegerField(default=2)
@@ -87,18 +88,9 @@ class Item(models.Model):
         if Item.objects.filter(priority=self.priority+1):
             return Item.objects.get(priority=self.priority+1)
     
-    def up(self):
-        prev = self.previous()
-        priority = self.priority
-        self.priority = prev.priority
-        prev.priority = None
-        prev.save()
-        self.save()
-        prev.priority = priority
-        prev.save()
-    
     def get_absolute_url(self):
         return 'http://localhost:8000%s'%reverse('item_view', kwargs={'id': self.id})
     
     class Meta:
         ordering = ['priority',]
+        unique_together = (('priority', 'sprint'),)

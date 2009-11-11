@@ -10,7 +10,7 @@
 <style type="text/css">
 	body{font:normal 12px Verdana, Arial, Helvetica, sans-serif;color:#3a3a3a;}
 	#backlogagile{width:70%;margin:0 auto;}
-	.sortable { list-style-type: none; margin: 10px 0; padding: 0; position:relative;}
+	.sortable { list-style-type: none; margin: 10px 0; padding: 0; position:relative; min-height: 10px;}
 	.sortable li{ margin-bottom: 3px; padding: 10px; cursor: move;position:relative;}
 	.sortable.odd li{background:#ebebeb;}
 	.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
@@ -34,9 +34,6 @@ $(document).ready(function() {
 		opacity: 0.7,
 		connectWith: '.sortable',
 		placeholder: 'ui-state-highlight',
-		update: function(event, ui) {
-			$.post("{% url item_sort %}", {'item[]': $(".sortable").sortable('toArray')});
-		}
 	}).disableSelection();
 
 	$(".description").hide();
@@ -80,11 +77,16 @@ function isBottom() {
 <div id="backlogagile">
 	{% for sprint in sprints %}
 	<h1>{{ sprint }}</h1>
-	<ul class="sortable odd">
+	<ul class="sortable odd" id="sprint_{{ sprint.id }}">
 		{% for item in sprint.items.all %}
 			<li class="ui-state-default" id="{{ item.id }}">{% item_show item %}</li>
 		{% endfor %}
 	</ul>
+	<script type="text/javascript">
+	$('#sprint_{{ sprint.id }}').bind('sortupdate', function(event, ui) {
+		$.post("{% url sprint_view sprint.id %}", {'item[]': $(this).sortable('toArray')});
+	});
+	</script>
 	{% endfor %}
 </div>
 </body>
