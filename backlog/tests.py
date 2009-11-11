@@ -105,12 +105,34 @@ class ListViewTest(TestCase):
         self.assertTemplateUsed(response, 'item_list.html')
     
 class ProjectTest(TestCase):
+    def test_project_view(self):
+        """
+        A project plan should be accessible at /backlog/project-name-slug/plan
+        """
+        target = Project.objects.create(name='test project', slug='test_project')
+        items = []
+        for i in range(10):
+            items.append(Item.objects.create(project=target, summary='item%d'%i, complexity=i%6 or 1))
+        
+        delta =  timedelta(30)
+        now = datetime.now()
+        
+        target.plan(7, now, delta, 3)
+        
+        self.failUnlessEqual('/backlog/project/%s/plan/'%target.slug, target.get_absolute_url())
+        
+        response = self.client.get(target.get_absolute_url())
+        self.failUnlessEqual(200, response.status_code)
+        self.assertTemplateUsed(response, 'item_list.html')
+        self.failUnless(all([sprint in target.sprints.all() for sprint in response.context['sprints']]))
+        self.failUnless(all([sprint in response.context['sprints'] for sprint in target.sprints.all()]))
+    
     def test_plan(self):
         """
         Each sprint should be created whenever there is still backlog items left until
         a maximum. It should consider a velocity parameter and a duration parameter.
         """
-        target = Project.objects.create(name='test project')
+        target = Project.objects.create(name='test project', slug='test-project')
         items = []
         for i in range(10):
             items.append(Item.objects.create(project=target, summary='item%d'%i, complexity=i%6 or 1))

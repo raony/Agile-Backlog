@@ -78,19 +78,14 @@ function isBottom() {
 </head>
 <body>
 <div id="backlogagile">
-	<h1>Sprint 1</h1>
+	{% for sprint in sprints %}
+	<h1>{{ sprint }}</h1>
 	<ul class="sortable odd">
-		{% for item in items %}
+		{% for item in sprint.items.all %}
 			<li class="ui-state-default" id="{{ item.id }}">{% item_show item %}</li>
 		{% endfor %}
 	</ul>
-
-	<h1>Sprint 2</h1>
-	<ul class="sortable even">
-		{% for item in items %}
-			<li class="ui-state-default" id="{{ item.id }}">{% item_show item %}</li>
-		{% endfor %}
-	</ul>
+	{% endfor %}
 </div>
 </body>
 </html>

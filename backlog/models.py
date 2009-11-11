@@ -3,7 +3,15 @@ from django.db import models
 # Create your models here.
 class Project(models.Model):
     name = models.CharField(max_length=250)
+    slug = models.SlugField(max_length=250)
     vision_statement = models.TextField(null=True, blank=True)
+    
+    def __unicode__(self):
+        return self.name
+    
+    @models.permalink
+    def get_absolute_url(self):
+        return ('project_plan', [self.slug])
     
     def plan(self, base_velocity, base_date, timedelta, max_number=None):
         if self.sprints.count():

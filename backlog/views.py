@@ -28,3 +28,8 @@ def sort(request):
 def list_view(request):
     return render_to_response('item_list.html', { 'items': Item.objects.all() }, 
                               context_instance=RequestContext(request))
+
+def project_plan(request, slug):
+    project = Project.objects.get(slug=slug)
+    return render_to_response('item_list.html', { 'sprints': project.sprints.all() }, 
+                              context_instance=RequestContext(request))

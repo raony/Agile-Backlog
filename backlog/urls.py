@@ -10,6 +10,8 @@ urlpatterns = patterns('',
     url(r'^item/(?P<id>\d+)/$', 'backlog.views.item', name='item_view'),
     url(r'^item/sort/$', 'backlog.views.sort', name='item_sort'),
     
+    url(r'^project/(?P<slug>[\w|\-|\_]+)/plan/$', 'backlog.views.project_plan', name='project_plan'),
+    
     url(r'^list_view/$', 'backlog.views.list_view', name='list_view'),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
