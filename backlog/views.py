@@ -1,9 +1,11 @@
 # Create your views here.
+import json
 from django.http import HttpResponse, Http404
 from django.core import serializers
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from models import *
+
 
 def item_view(request, id):
     return HttpResponse(serializers.serialize('json', Item.objects.filter(id=id)))
@@ -27,7 +29,7 @@ def sprint_view(request, id):
             item.priority = i+1
             item.sprint = t_sprint
             item.save()
-        return HttpResponse('')
+        return HttpResponse(json.dumps(t_sprint.resize()))
     
     return HttpResponse(serializers.serialize('json', [t_sprint] + list(t_sprint.items.all())))
 

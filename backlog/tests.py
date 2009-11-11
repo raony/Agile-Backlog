@@ -63,7 +63,7 @@ class SprintTest(TestCase):
         A http POST to /sprint/<id>/sort/ with item ids in data should 
         set the sprint backlog.
         """
-        target = Sprint.objects.create(project=self.project, number=1)
+        target = Sprint.objects.create(project=self.project, number=1, velocity=6)
         response = self.client.post('/backlog/sprint/%d/'%target.id, {'item[]': [self.i3.id,
                                                                        self.i2.id,
                                                                        self.i1.id]})
@@ -71,6 +71,23 @@ class SprintTest(TestCase):
         self.failUnlessEqual(self.i3, target.items.all()[0])
         self.failUnlessEqual(self.i2, target.items.all()[1])
         self.failUnlessEqual(self.i1, target.items.all()[2])
+    
+    def test_http_set_overflow(self):
+        """
+        When a http POST to /sprint/<id>/sort/ with item that is greater than
+        sprint capacity, the sprints should be resized and the spread returned.
+        """
+        target = Sprint.objects.create(project=self.project, number=1)
+        target2 = Sprint.objects.create(project=self.project, number=2)
+        response = self.client.post('/backlog/sprint/%d/'%target.id, {'item[]': [self.i3.id,
+                                                                       self.i2.id,
+                                                                       self.i1.id]})
+        self.failUnlessEqual('[1, 2, -1]', response.content)
+        self.failUnlessEqual(200, response.status_code)
+        self.failUnlessEqual(1, target.items.count())
+        self.failUnlessEqual(self.i3, target.items.all()[0])
+        self.failUnlessEqual(1, target2.items.count())
+        self.failUnlessEqual(self.i2, target2.items.all()[0])
     
     def test_sprint_url(self):
         """

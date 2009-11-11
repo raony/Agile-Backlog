@@ -53,7 +53,7 @@ class Sprint(models.Model):
     goal = models.TextField(null=True, blank=True)
     number = models.PositiveSmallIntegerField()
     deadline = models.DateTimeField(null=True, blank=True)
-    velocity = models.PositiveIntegerField(null=True, blank=True)
+    velocity = models.PositiveIntegerField(default=2, blank=True)
     
     project = models.ForeignKey(Project, related_name='sprints')
     
@@ -66,6 +66,30 @@ class Sprint(models.Model):
     
     def get_absolute_url(self):
         return 'http://localhost:8000%s'%reverse('sprint_view', kwargs={'id': self.id})
+    
+    def resize(self):
+        current = self.items.all().aggregate(total = models.Sum('complexity'))['total'] or 0
+        try:
+            next_sprint = Sprint.objects.get(project=self.project, number=self.number+1)
+        except Sprint.DoesNotExist:
+            next_sprint = None
+        
+        resized = False
+        while current > self.velocity:
+            resized = True
+            last = self.items.order_by('-priority').all()[0]
+            last.sprint = next_sprint
+            last.save()
+            current = self.items.all().aggregate(total = models.Sum('complexity'))['total'] or 0
+        
+        if resized:
+            spread = [self.id]
+            if next_sprint:
+                return spread + next_sprint.resize()
+            else:
+                return spread + [-1]
+        else:
+            return []
     
     class Meta:
         ordering = ['number',]
