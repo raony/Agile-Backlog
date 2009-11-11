@@ -30,9 +30,6 @@
 
 <script type="text/javascript">
 
-f_loader = new loader({{ project_id }});
-
-
 $(document).ready(function() {
 	$(".sortable").sortable({
 		axis: 'y',
@@ -55,6 +52,8 @@ $(document).ready(function() {
 			}
 		});
 	});
+
+	f_loader = new loader({{ project_id }});
 });
 
 $(window).scroll(function() {
