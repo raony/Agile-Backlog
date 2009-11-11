@@ -67,14 +67,14 @@ class Sprint(models.Model):
     def get_absolute_url(self):
         return 'http://localhost:8000%s'%reverse('sprint_view', kwargs={'id': self.id})
     
-    def resize(self):
+    def resize(self, first=True):
         current = self.items.all().aggregate(total = models.Sum('complexity'))['total'] or 0
         try:
             next_sprint = Sprint.objects.get(project=self.project, number=self.number+1)
         except Sprint.DoesNotExist:
             next_sprint = None
         
-        resized = False
+        resized = not first
         while current > self.velocity:
             resized = True
             last = self.items.order_by('-priority').all()[0]
@@ -85,7 +85,7 @@ class Sprint(models.Model):
         if resized:
             spread = [self.id]
             if next_sprint:
-                return spread + next_sprint.resize()
+                return spread + next_sprint.resize(False)
             else:
                 return spread + [-1]
         else:

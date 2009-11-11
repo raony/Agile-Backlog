@@ -31,36 +31,14 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-	$(".sortable").sortable({
-		axis: 'y',
-		opacity: 0.7,
-		connectWith: '.sortable',
-		placeholder: 'ui-state-highlight',
-	}).disableSelection();
-
-	$(".description").hide();
-	
-	$(".toggledescription").click(function() {
-		var o = $(this);
-		$(this).parent().find(".description").toggle(0, function() {
-			if ($(this).is(":visible")) {
-				o.addClass("toggleback");
-				o.find("span").text("Ocultar");
-			} else {
-				o.removeClass("toggleback");
-				o.find("span").text("Exibir");
-			}
-		});
-	});
-
 	f_loader = new loader({{ project_id }});
 });
 
-$(window).scroll(function() {
-	if (isBottom()) {
-		alert("chegou no fim.");
-	}
-});
+//$(window).scroll(function() {
+//	if (isBottom()) {
+//		alert("chegou no fim.");
+//	}
+//});
 
 function isBottom() {
 	var scr;

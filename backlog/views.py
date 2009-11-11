@@ -23,7 +23,7 @@ def sprint_view(request, id):
     if request.method == 'POST':
         id_list = [int(x) for x in request.POST.getlist('item[]')]
         t_sprint.items.all().update(priority=None, sprint=None)
-        
+        print t_sprint.items.all()
         for i, id in enumerate(id_list):
             item = Item.objects.get(id=id)
             item.priority = i+1
