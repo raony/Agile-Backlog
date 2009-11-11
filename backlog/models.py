@@ -64,6 +64,9 @@ class Sprint(models.Model):
         current = self.items.all().aggregate(total = models.Sum('complexity'))['total'] or 0
         return (current + item.complexity) <= self.velocity
     
+    def get_absolute_url(self):
+        return 'http://localhost:8000%s'%reverse('sprint_view', kwargs={'id': self.id})
+    
     class Meta:
         ordering = ['number',]
         unique_together = (('number', 'project'),)

@@ -5,33 +5,37 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext
 from models import *
 
-def item(request, id):
+def item_view(request, id):
     return HttpResponse(serializers.serialize('json', Item.objects.filter(id=id)))
 
-def sprint(request, id):
-    t_sprint = Sprint.objects.filter(id=id)
+def sprint_view(request, id):
+    try:
+        t_sprint = Sprint.objects.get(id=id)
+    except Sprint.DoesNotExist:
+        return Http404()
+    
     if request.method == 'POST':
-        list = [int(x) for x in request.POST.getlist('item[]')]
-        if t_sprint:
-            t_sprint = t_sprint[0]
-        else:
-            return Http404()
-        
+        id_list = [int(x) for x in request.POST.getlist('item[]')]
         t_sprint.items.all().update(priority=None, sprint=None)
         
-        for i, id in enumerate(list):
+        for i, id in enumerate(id_list):
             item = Item.objects.get(id=id)
             item.priority = i+1
             item.sprint = t_sprint
             item.save()
         return HttpResponse('')
-    return HttpResponse(serializers.serialize('json', t_sprint))
-
-def list_view(request):
-    return render_to_response('item_list.html', { 'items': Item.objects.all() }, 
-                              context_instance=RequestContext(request))
+    
+    return HttpResponse(serializers.serialize('json', [t_sprint] + list(t_sprint.items.all())))
 
 def project_plan(request, slug):
     project = Project.objects.get(slug=slug)
-    return render_to_response('item_list.html', { 'sprints': project.sprints.all() }, 
+    return render_to_response('item_list.html', { 'project_id': project.id, 
+                                                 'sprints': project.sprints.all() }, 
                               context_instance=RequestContext(request))
+
+def project_view(request, id):
+    try:
+        project = Project.objects.get(id=id)
+    except Project.DoesNotExist:
+        return Http404()
+    return HttpResponse(serializers.serialize('json', [project] + list(project.sprints.all())))

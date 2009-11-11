@@ -60,7 +60,7 @@ class SprintTest(TestCase):
         
     def test_http_set(self):
         """
-        A http POST to /sprint/<number>/sort/ with item ids in data should 
+        A http POST to /sprint/<id>/sort/ with item ids in data should 
         set the sprint backlog.
         """
         target = Sprint.objects.create(project=self.project, number=1)
@@ -71,6 +71,17 @@ class SprintTest(TestCase):
         self.failUnlessEqual(self.i3, target.items.all()[0])
         self.failUnlessEqual(self.i2, target.items.all()[1])
         self.failUnlessEqual(self.i1, target.items.all()[2])
+    
+    def test_sprint_url(self):
+        """
+        A http get to /sprint/<id>/ should return its properties as json.
+        """
+        target = Sprint.objects.create(project=self.project, number=1)
+        Item.objects.create(summary='item 1', priority=1, sprint=target)
+        response = self.client.get(target.get_absolute_url())
+        self.failUnlessEqual(200, response.status_code)
+        self.failUnlessEqual(serializers.serialize('json', [target] + list(target.items.all())),response.content)
+        
 class ListViewTest(TestCase):
 #    def test_item_template(self):
 #        """
@@ -84,7 +95,7 @@ class ListViewTest(TestCase):
     pass    
     
 class ProjectTest(TestCase):
-    def test_project_view(self):
+    def test_project_plan_view(self):
         """
         A project plan should be accessible at /backlog/project-name-slug/plan
         """
@@ -105,6 +116,18 @@ class ProjectTest(TestCase):
         self.assertTemplateUsed(response, 'item_list.html')
         self.failUnless(all([sprint in target.sprints.all() for sprint in response.context['sprints']]))
         self.failUnless(all([sprint in response.context['sprints'] for sprint in target.sprints.all()]))
+    
+    def test_project_view(self):
+        """
+        A http get to /project/<id>/ should return its properties as json.
+        """
+        target = Project.objects.create(name='test project', slug='test_project')
+        for i in range(5):
+            Sprint.objects.create(project=target, deadline=datetime.now(), number=i)
+        
+        response = self.client.get('/backlog/project/%d/'%target.id)
+        self.failUnlessEqual(200, response.status_code)
+        self.failUnlessEqual(serializers.serialize('json', [target] + list(target.sprints.all())),response.content)
     
     def test_plan(self):
         """

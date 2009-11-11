@@ -5,8 +5,9 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
 <script type="text/javascript" src="{{ MEDIA_URL }}backlog/js/jquery-1.3.2.min.js"></script>
-
 <script type="text/javascript" src="{{ MEDIA_URL }}backlog/js/jquery-ui-1.7.2.custom.min.js"></script>
+<script type="text/javascript" src="{{ MEDIA_URL }}backlog/js/sprint.loader.js"></script>
+
 <style type="text/css">
 	body{font:normal 12px Verdana, Arial, Helvetica, sans-serif;color:#3a3a3a;}
 	#backlogagile{width:70%;margin:0 auto;}
@@ -28,6 +29,10 @@
 </style>
 
 <script type="text/javascript">
+
+f_loader = new loader({{ project_id }});
+
+
 $(document).ready(function() {
 	$(".sortable").sortable({
 		axis: 'y',

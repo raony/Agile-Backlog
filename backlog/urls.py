@@ -6,11 +6,12 @@ from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
     # Example:
-    url(r'^item/(?P<id>\d+)/$', 'backlog.views.item', name='item_view'),
+    url(r'^item/(?P<id>\d+)/$', 'backlog.views.item_view', name='item_view'),
     
-    url(r'^sprint/(?P<id>\d+)/$', 'backlog.views.sprint', name='sprint_view'),
+    url(r'^sprint/(?P<id>\d+)/$', 'backlog.views.sprint_view', name='sprint_view'),
     
     url(r'^project/(?P<slug>[\w|\-|\_]+)/plan/$', 'backlog.views.project_plan', name='project_plan'),
+    url(r'^project/(?P<id>\d+)/$', 'backlog.views.project_view', name='project_view'),
     
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
