@@ -50,6 +50,16 @@ class ItemTest(TestCase):
         response = self.client.get(self.i1.get_absolute_url())
         self.failUnlessEqual(200, response.status_code)
         self.failUnlessEqual(serializers.serialize('json', [self.i1,]),response.content)
+    
+    def test_item_view(self):
+        """
+        A http get to /item/id/view should return an html of the item.
+        """
+        response = self.client.get('/backlog/item/%d/view/'%self.i1.id)
+        self.failUnlessEqual(200, response.status_code)
+        self.assertTemplateUsed(response, 'item.html')
+        self.failUnlessEqual(self.i1, response.context['item'])
+        
 
 class SprintTest(TestCase):
     def setUp(self):

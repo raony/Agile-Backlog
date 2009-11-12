@@ -22,8 +22,6 @@ def sprint_view(request, id):
     
     if request.method == 'POST':
         id_list = [int(x) for x in request.POST.getlist('item[]')]
-        print id_list
-        print t_sprint.items.all()
         t_sprint.items.all().update(priority=None, sprint=None)
         
         for i, id in enumerate(id_list):

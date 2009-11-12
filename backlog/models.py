@@ -91,10 +91,7 @@ class Sprint(models.Model):
         if resized:
             spread = [self.id]
             if next_sprint:
-                ar = spread + next_sprint.resize(False)
-                if first:
-                    print ar
-                return ar
+                return spread + next_sprint.resize(False)
             else:
                 return spread + [-1]
         elif not first:
