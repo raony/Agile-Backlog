@@ -70,7 +70,7 @@ class Sprint(models.Model):
     def get_absolute_url(self):
         return 'http://localhost:8000%s'%reverse('sprint_view', kwargs={'id': self.id})
     
-    def resize(self, first=True):
+    def resize(self, number=False):
         current = self.items.all().aggregate(total = models.Sum('complexity'))['total'] or 0
         try:
             next_sprint = Sprint.objects.get(project=self.project, number=self.number+1)
@@ -91,16 +91,22 @@ class Sprint(models.Model):
                 item.save()
             current = self.items.all().aggregate(total = models.Sum('complexity'))['total'] or 0
         
-        if resized:
+        if number:
+            spread = [self.number]
+            out = self.number + 1
+        else:
             spread = [self.id]
+            out = -1
+            
+        if resized:
             if next_sprint:
-                return spread + next_sprint.resize(False)
+                return spread + next_sprint.resize(number)
             else:
-                return spread + [-1]
-        elif not first:
-            return [self.id]
-        else:            
-            return []
+                return spread + [out]
+        else:
+            return spread
+#        else:            
+#            return []
     
     class Meta:
         ordering = ['number',]

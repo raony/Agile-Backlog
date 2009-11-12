@@ -38,10 +38,44 @@ def sprint_html_view(request, id):
                                               'items_json': json.dumps([item.id for item in Item.objects.filter(sprint=id)])},
                               context_instance=RequestContext(request))
 
+def project_sprint(request, slug, number):
+    try:
+        sprint = Sprint.objects.get(project__slug=slug, number=number)
+        template = 'sprint.html'
+    except Sprint.DoesNotExist:
+        sprint = None
+        template = 'out.html'
+    items = Item.objects.filter(project__slug=slug, sprint=sprint)
+    
+    if request.method == 'POST':
+        id_list = [int(x) for x in request.POST.getlist('item[]')]
+        items.update(priority=None, sprint=None)
+        
+        for i, id in enumerate(id_list):
+            item = Item.objects.get(id=id)
+            item.priority = i+1
+            item.sprint = sprint
+            item.save()
+        
+        if sprint:
+            return HttpResponse(json.dumps(sprint.resize(True)))
+        else:
+            return HttpResponse(json.dumps([]))
+    
+    return render_to_response(template, {'sprint': sprint,
+                                         'sprint_num': number,
+                                         'items': items,
+                                         'items_json': json.dumps([item.id for item in items])},
+                              context_instance=RequestContext(request))
+
 def project_plan(request, slug):
     project = Project.objects.get(slug=slug)
+    sprints = list(project.sprints.all().values_list('number', flat=True))
+    sprints = sprints + [sprints[-1]+1]
     return render_to_response('plan.html', { 'project': project, 
-                                                 'sprints_json': json.dumps([sprint.id for sprint in project.sprints.all()]), }, 
+                                             'sprints': sprints,
+                                             'sprints_json': json.dumps(sprints),
+                                           }, 
                               context_instance=RequestContext(request))
 
 def project_view(request, id):

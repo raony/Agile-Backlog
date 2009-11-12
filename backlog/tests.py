@@ -120,18 +120,6 @@ class SprintTest(TestCase):
         self.assertTemplateUsed(response, 'sprint.html')
         self.failUnlessEqual(target, response.context['sprint'])
         
-class ListViewTest(TestCase):
-#    def test_item_template(self):
-#        """
-#        There is a template for item that shows its summary and description in separated divs.
-#        """
-#        template = get_template('item.html')
-#        
-#        result = template.render(Context({'item' : Item(id=4, summary='item1', description='description1')}))
-#        self.failUnlessEqual('<div id="item_4"><div id="summary">item1</div><div id="description">description1</div></div>', 
-#                             result)
-    pass    
-    
 class ProjectTest(TestCase):
     def test_project_plan_view(self):
         """
@@ -152,7 +140,18 @@ class ProjectTest(TestCase):
         response = self.client.get(target.get_absolute_url())
         self.failUnlessEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'plan.html')
-        self.failUnlessEqual(json.dumps([sprint.id for sprint in target.sprints.all()]), response.context['sprints'])
+        self.failUnlessEqual([1,2,3,4], response.context['sprints'])
+    
+    def test_project_sprint_view(self):
+        """
+        One should be able to retrieve a sprint view through /project/<slug>/sprint/<number> url.
+        """
+        target = Project.objects.create(name='test project', slug='test_project')
+        sp1 = Sprint.objects.create(project=target, number=1)
+        response = self.client.get('/backlog/project/test_project/sprint/%d/view/'%sp1.number)
+        self.failUnlessEqual(200, response.status_code)
+        self.assertTemplateUsed(response, 'sprint.html')
+        self.failUnlessEqual(sp1, response.context['sprint'])
     
     def test_project_view(self):
         """

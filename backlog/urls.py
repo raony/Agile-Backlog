@@ -13,7 +13,10 @@ urlpatterns = patterns('',
     url(r'^sprint/(?P<id>\d+)/view/$', 'backlog.views.sprint_html_view', name='sprint_html_view'),
     
     url(r'^project/(?P<slug>[\w|\-|\_]+)/plan/$', 'backlog.views.project_plan', name='project_plan'),
+    url(r'^project/(?P<slug>[\w|\-|\_]+)/sprint/(?P<number>\d+)/$', 'backlog.views.project_sprint', name='project_sprint'),
+    
     url(r'^project/(?P<id>\d+)/$', 'backlog.views.project_view', name='project_view'),
+    
     
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:

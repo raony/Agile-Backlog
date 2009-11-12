@@ -73,8 +73,12 @@ function loadSprints(offset, number) {
 	});
 }
 
-function load_sprint(sprint) {
-	$('#sprint_'+sprint).load('/backlog/sprint/' + sprint + '/view/', [], function() {
+function load_sprint(slug, sprint) {
+	if (sprint == 'out') {
+		path = '/backlog/project/' 
+	}
+	
+	$('#sprint_'+sprint).load('/backlog/project/' + slug + '/sprint/' + sprint + '/', '', function() {
 		$('#sort_'+ sprint).sortable({
 			axis: 'y',
 			opacity: 0.7,
@@ -89,10 +93,10 @@ function load_sprint(sprint) {
 					}
 				}
 				if (found) {
-					$.post('/backlog/sprint/' + sprint + '/', {'item[]': $(this).sortable('toArray')},
+					$.post('/backlog/project/' + slug + '/sprint/' + sprint + '/', {'item[]': $(this).sortable('toArray')},
 						function(data, textStatus) {
 							for (w = 0; w < data.length; w++) {
-								load_sprint(data[w]);
+								load_sprint(slug, data[w]);
 							}
 						}, 'json');
 				}

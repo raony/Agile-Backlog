@@ -14,7 +14,7 @@
 	#backlogagile{width:70%;margin:0 auto;}
 	.sortable { list-style-type: none; margin:0 0 10px 0; padding: 0; position:relative; min-height: 10px;}
 	.sortable li{ margin-bottom: 3px; padding: 10px;padding-left:26px; cursor: move;position:relative;}
-	.sortable.odd li{background:#ebebeb;}
+	.odd .sortable li{background:#ebebeb;}
 	.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
 	
 	.ui-state-default, .ui-widget-content .ui-state-default { border: 1px solid #cbc7bd; background: #f8f7f6; }
@@ -35,9 +35,9 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-	sprints = {{ sprints_json }};
+	sprints = {{ sprints_json }}
 	for (i = 0; i < sprints.length; i++) {
-		load_sprint(sprints[i])
+		load_sprint('{{ project.slug }}', sprints[i])
 	}
 
 	$(".description").hide();
@@ -86,25 +86,9 @@ function isBottom() {
 </head>
 <body>
 <div id="backlogagile">
-	{% for sprint in project.sprints.all %}
-	<div id="sprint_{{ sprint.id }}"></div>
+	{% for sprint in sprints %}
+	<div id="sprint_{{ sprint }}" style="{% cycle 'odd' 'even' %}"></div>
 	{% endfor %}
-
-	{% comment %}
-		{% for sprint in sprints %}
-		<h1>{{ sprint }}</h1>
-		<ul class="sortable odd" id="sprint_{{ sprint.id }}">
-			{% for item in sprint.items.all %}
-				<li class="ui-state-default" id="{{ item.id }}">{% item_show item %}</li>
-			{% endfor %}
-		</ul>
-		<script type="text/javascript">
-		$('#sprint_{{ sprint.id }}').bind('sortupdate', function(event, ui) {
-			$.post("{% url sprint_view sprint.id %}", {'item[]': $(this).sortable('toArray')});
-		});
-		</script>
-		{% endfor %}
-	{% endcomment %}
 </div>
 </body>
 </html>
