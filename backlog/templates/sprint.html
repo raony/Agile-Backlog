@@ -6,31 +6,5 @@
 </ul>
 
 <script type="text/javascript">
-	items_{{ sprint.id }} = {{ items_json }};
-	for (i = 0; i < items_{{ sprint.id }}.length; i++) {
-		$('#' + items_{{ sprint.id }}[i]).load('/backlog/item/' + items_{{ sprint.id }}[i] + '/view/')
-	}
-	$('#sort_{{ sprint.id }}').sortable({
-		axis: 'y',
-		opacity: 0.7,
-		connectWith: '.sortable',
-		placeholder: 'ui-state-highlight',
-		update: function(event, ui) {
-			found = false;
-			for (z = 0; z < this.childNodes.length; z++) {
-				if (this.childNodes[z] == ui.item[0]) {
-					found = true;
-					break;
-				}
-			}
-			if (found) {
-				$.post('/backlog/sprint/' + {{ sprint.id }} + '/', {'item[]': $(this).sortable('toArray')},
-						function(data, textStatus) {
-					for (w = 0; w < data.length; w++) {
-						alert(data[w]);
-					}
-				}, 'json');
-			}
-		}
-	}).disableSelection();
+	load_items($("#sort_{{ sprint.id }}"), {{ items_json }});
 </script>

@@ -40,8 +40,8 @@ def sprint_html_view(request, id):
 
 def project_plan(request, slug):
     project = Project.objects.get(slug=slug)
-    return render_to_response('plan.html', { 'project_id': project.id, 
-                                                 'sprints': json.dumps([sprint.id for sprint in project.sprints.all()]), }, 
+    return render_to_response('plan.html', { 'project': project, 
+                                                 'sprints_json': json.dumps([sprint.id for sprint in project.sprints.all()]), }, 
                               context_instance=RequestContext(request))
 
 def project_view(request, id):

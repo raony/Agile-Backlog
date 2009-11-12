@@ -73,7 +73,37 @@ function loadSprints(offset, number) {
 	});
 }
 
-function reload(id) {
-	alert(id);
+function load_sprint(sprint) {
+	$('#sprint_'+sprint).load('/backlog/sprint/' + sprint + '/view/', [], function() {
+		$('#sort_'+ sprint).sortable({
+			axis: 'y',
+			opacity: 0.7,
+			connectWith: '.sortable',
+			placeholder: 'ui-state-highlight',
+			update: function(event, ui) {
+				found = false;
+				for (z = 0; z < this.childNodes.length; z++) {
+					if (this.childNodes[z] == ui.item[0]) {
+						found = true;
+						break;
+					}
+				}
+				if (found) {
+					$.post('/backlog/sprint/' + sprint + '/', {'item[]': $(this).sortable('toArray')},
+						function(data, textStatus) {
+							for (w = 0; w < data.length; w++) {
+								load_sprint(data[w]);
+							}
+						}, 'json');
+				}
+			}
+		}).disableSelection();
+	});
+}
+
+function load_items(sortable, items) {
+	for (i = 0; i < items.length; i++) {
+		sortable.find('#' + items[i]).load('/backlog/item/' + items[i] + '/view/')
+	}	
 }
 
