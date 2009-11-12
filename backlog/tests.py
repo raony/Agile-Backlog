@@ -151,7 +151,7 @@ class ProjectTest(TestCase):
         
         response = self.client.get(target.get_absolute_url())
         self.failUnlessEqual(200, response.status_code)
-        self.assertTemplateUsed(response, 'item_list.html')
+        self.assertTemplateUsed(response, 'plan.html')
         self.failUnlessEqual(json.dumps([sprint.id for sprint in target.sprints.all()]), response.context['sprints'])
     
     def test_project_view(self):

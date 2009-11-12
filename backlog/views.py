@@ -34,12 +34,13 @@ def sprint_view(request, id):
     return HttpResponse(serializers.serialize('json', [t_sprint] + list(t_sprint.items.all())))
 
 def sprint_html_view(request, id):
-    return render_to_response('sprint.html', {'sprint': Sprint.objects.get(id=id),},
+    return render_to_response('sprint.html', {'sprint': Sprint.objects.get(id=id),
+                                              'items_json': json.dumps([item.id for item in Item.objects.filter(sprint=id)])},
                               context_instance=RequestContext(request))
 
 def project_plan(request, slug):
     project = Project.objects.get(slug=slug)
-    return render_to_response('item_list.html', { 'project_id': project.id, 
+    return render_to_response('plan.html', { 'project_id': project.id, 
                                                  'sprints': json.dumps([sprint.id for sprint in project.sprints.all()]), }, 
                               context_instance=RequestContext(request))
 

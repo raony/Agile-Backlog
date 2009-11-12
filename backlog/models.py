@@ -60,6 +60,9 @@ class Sprint(models.Model):
     def __unicode__(self):
         return 'Sprint %d'%self.number
     
+    def load(self):
+        return self.items.all().aggregate(total = models.Sum('complexity'))['total'] or 0
+    
     def has_place(self, item):
         current = self.items.all().aggregate(total = models.Sum('complexity'))['total'] or 0
         return (current + item.complexity) <= self.velocity

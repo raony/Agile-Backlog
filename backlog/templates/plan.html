@@ -31,7 +31,10 @@
 <script type="text/javascript">
 
 $(document).ready(function() {
-	f_loader = new loader({{ project_id }});
+	sprints = {{ sprints }};
+	for (i = 0; i < sprints.length; i++) {
+		$('#sprint_' + sprints[i]).load('/backlog/sprint/' + sprints[i] + '/view/')
+	}
 });
 
 //$(window).scroll(function() {
@@ -57,6 +60,10 @@ function isBottom() {
 </head>
 <body>
 <div id="backlogagile">
+	{% for sprint in sprints %}
+	<div id="sprint_{{ sprint}}"></div>
+	{% endfor %}
+
 	{% comment %}
 		{% for sprint in sprints %}
 		<h1>{{ sprint }}</h1>
