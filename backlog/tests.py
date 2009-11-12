@@ -108,6 +108,16 @@ class SprintTest(TestCase):
         response = self.client.get(target.get_absolute_url())
         self.failUnlessEqual(200, response.status_code)
         self.failUnlessEqual(serializers.serialize('json', [target] + list(target.items.all())),response.content)
+    
+    def test_sprint_view(self):
+        """
+        A http get to /sprint/id/view should return an html of the sprint.
+        """
+        target = Sprint.objects.create(project=self.project, number=1)
+        response = self.client.get('/backlog/sprint/%d/view/'%target.id)
+        self.failUnlessEqual(200, response.status_code)
+        self.assertTemplateUsed(response, 'sprint.html')
+        self.failUnlessEqual(target, response.context['sprint'])
         
 class ListViewTest(TestCase):
 #    def test_item_template(self):

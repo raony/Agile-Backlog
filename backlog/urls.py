@@ -10,6 +10,7 @@ urlpatterns = patterns('',
     url(r'^item/(?P<id>\d+)/view/$', 'backlog.views.item_html_view', name='item_html_view'),
     
     url(r'^sprint/(?P<id>\d+)/$', 'backlog.views.sprint_view', name='sprint_view'),
+    url(r'^sprint/(?P<id>\d+)/view/$', 'backlog.views.sprint_html_view', name='sprint_html_view'),
     
     url(r'^project/(?P<slug>[\w|\-|\_]+)/plan/$', 'backlog.views.project_plan', name='project_plan'),
     url(r'^project/(?P<id>\d+)/$', 'backlog.views.project_view', name='project_view'),
