@@ -1,0 +1,37 @@
+<div id="sprint_{{ sprint.id }}">
+	<h1>{{ sprint }} - {{ sprint.goal }} - {{ sprint.load }}/{{ sprint.velocity }}</h1>
+	<ul class="sortable odd" id="sort_{{ sprint.id }}">
+		{% for item in sprint.items.all %}
+			<li class="ui-state-default" id="{{ item.id }}" ></li>
+		{% endfor %}
+	</ul>
+	<script type="text/javascript">
+		items_{{ sprint.id }} = {{ items_json }};
+		for (i = 0; i < items_{{ sprint.id }}.length; i++) {
+			$('#' + items_{{ sprint.id }}[i]).load('/backlog/item/' + items_{{ sprint.id }}[i] + '/view/')
+		}
+		$('#sort_{{ sprint.id }}').sortable({
+			axis: 'y',
+			opacity: 0.7,
+			connectWith: '.sortable',
+			placeholder: 'ui-state-highlight',
+			update: function(event, ui) {
+				found = false;
+				for (z = 0; z < this.childNodes.length; z++) {
+					if (this.childNodes[z] == ui.item[0]) {
+						found = true;
+						break;
+					}
+				}
+				if (found) {
+					$.post('/backlog/sprint/' + {{ sprint.id }} + '/', {'item[]': $(this).sortable('toArray')},
+							function(data, textStatus) {
+						for (w = 0; w < data.length; w++) {
+							alert(data[w]);
+						}
+					}, 'json');
+				}
+			}
+		}).disableSelection();
+	</script>
+</div>
