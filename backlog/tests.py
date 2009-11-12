@@ -11,6 +11,7 @@ from models import *
 from django.core import serializers
 from django.template.loader import get_template
 from django.template.context import Context
+import json
 
 from datetime import timedelta, datetime
 
@@ -151,8 +152,7 @@ class ProjectTest(TestCase):
         response = self.client.get(target.get_absolute_url())
         self.failUnlessEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'item_list.html')
-        self.failUnless(all([sprint in target.sprints.all() for sprint in response.context['sprints']]))
-        self.failUnless(all([sprint in response.context['sprints'] for sprint in target.sprints.all()]))
+        self.failUnlessEqual(json.dumps([sprint.id for sprint in target.sprints.all()]), response.context['sprints'])
     
     def test_project_view(self):
         """
