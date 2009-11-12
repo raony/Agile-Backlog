@@ -103,7 +103,22 @@ function load_sprint(sprint) {
 
 function load_items(sortable, items) {
 	for (i = 0; i < items.length; i++) {
-		sortable.find('#' + items[i]).load('/backlog/item/' + items[i] + '/view/')
+		sortable.find('#' + items[i]).load('/backlog/item/' + items[i] + '/view/', '', 
+				function(responseText, textStatus, XMLHttpRequest) {
+				$(this).find(".description").hide();
+				$(this).find(".toggledescription").click(function() {
+					var o = $(this);
+					$(this).parent().find(".description").toggle(0, function() {
+						if ($(this).is(":visible")) {
+							o.addClass("toggleback");
+							o.find("span").text("Ocultar");
+						} else {
+							o.removeClass("toggleback");
+							o.find("span").text("Exibir");
+						}
+					});
+				});
+		});
 	}	
 }
 
