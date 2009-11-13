@@ -1,7 +1,9 @@
 {% load item_tags %}
 <div id="item_{{ item.id }}">
 	<h2 class="summary">{{ item.summary }}</h2>
-	<p class="complexity" style="font-size: {{ item.complexity|complexity_size }}">{{ item.complexity }}</p>
-	<a class="toggledescription" href="javascript:void(0);"><span>Exibir</span> descri&ccedil;&atilde;o</a>
+	<p class="complexity" title="Complexidade" style="font-size: {{ item.complexity|complexity_size }}px">{{ item.complexity }}</p>
+	{% if item.description %}
+	<a class="toggledescription" title="Exibir descri&ccedil;&atilde;o" href="javascript:void(0);"><span>Exibir</span> descri&ccedil;&atilde;o</a>
 	<p class="description">{{ item.description }}</p>
+	{% endif %}
 </div>

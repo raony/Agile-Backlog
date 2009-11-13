@@ -1,9 +1,13 @@
 <h1>{{ sprint }} - {{ sprint.goal }} - {{ sprint.load }}/{{ sprint.velocity }}</h1>
-<ul class="sortable odd" id="sort_{{ sprint.id }}">
-	{% for item in sprint.items.all %}
-		<li class="ui-state-default" id="{{ item.id }}" ></li>
-	{% endfor %}
-</ul>
+
+<div class="sprint">
+	<img class="loader" src="{{ MEDIA_URL }}backlog/img/loadinfo.gif" width="24" height="24" style="display:none;" />
+	<ul class="sortable even" id="sort_{{ sprint.id }}">
+		{% for item in sprint.items.all %}
+			<li class="ui-state-default" id="{{ item.id }}" ></li>
+		{% endfor %}
+	</ul>
+</div>
 
 <script type="text/javascript">
 	load_items($("#sort_{{ sprint.id }}"), {{ items_json }});
