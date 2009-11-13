@@ -122,6 +122,7 @@ function load_items(sortable, items) {
 						}
 					});
 				});
+				$(this).show()
 		});
 	}	
 }

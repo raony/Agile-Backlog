@@ -148,7 +148,7 @@ class ProjectTest(TestCase):
         """
         target = Project.objects.create(name='test project', slug='test_project')
         sp1 = Sprint.objects.create(project=target, number=1)
-        response = self.client.get('/backlog/project/test_project/sprint/%d/view/'%sp1.number)
+        response = self.client.get('/backlog/project/test_project/sprint/%d/'%sp1.number)
         self.failUnlessEqual(200, response.status_code)
         self.assertTemplateUsed(response, 'sprint.html')
         self.failUnlessEqual(sp1, response.context['sprint'])
