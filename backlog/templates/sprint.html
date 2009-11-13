@@ -1,5 +1,5 @@
 <h1>{{ sprint }} - {{ sprint.goal }} - {{ sprint.load }}/{{ sprint.velocity }}</h1>
-<ul class="sortable" id="sort_{{ sprint_num }}">
+<ul class="sortable sprint" id="sort_{{ sprint_num }}">
 	{% for item in sprint.items.all %}
 		<li class="ui-state-default" id="{{ item.id }}" style="display: none;" ></li>
 	{% endfor %}

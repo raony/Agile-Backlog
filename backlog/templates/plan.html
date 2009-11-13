@@ -12,7 +12,7 @@
 <style type="text/css">
 	body{font:normal 12px Verdana, Arial, Helvetica, sans-serif;color:#3a3a3a;}
 	#backlogagile{width:70%;margin:0 auto;}
-	.sortable { list-style-type: none; margin:0 0 10px 0; padding: 0; position:relative; min-height: 10px;}
+	.sortable { list-style-type: none; margin:0 0 10px 0; padding: 0; position:relative; min-height:40px;}
 	.sortable li{ margin-bottom: 3px; padding: 10px;padding-left:26px; cursor: move;position:relative;}
 	.odd .sortable li{background:#ebebeb;}
 	.ui-state-highlight { height: 1.5em; line-height: 1.2em; }
@@ -24,7 +24,7 @@
 	.toggledescription{position:absolute;top:10px;left:4px;display:block;width:16px;height:16px;text-indent:-999em;background:url({{ MEDIA_URL }}backlog/css/agile-backlog/images/ui-icons_3572ac_256x240.png) -64px -192px no-repeat;}
 	.toggledescription.toggleback{background-position:-96px -192px;}
 	.complexity{position:absolute;right:10px;top:0;margin:0;font-weight:700;padding:2px;background:#f7f3ad;border:1px solid #d9d593;border-top:none;}
-	.loader{display:block;width:24px;height:24px;margin:0 auto;padding:10px 0;}
+	.loader img{display:block;width:24px;height:24px;margin:0 auto;padding:10px 0;}
 	.sprint{background:#ebebeb;padding:4px;padding-bottom:1px;}
 	
 	h1{font-size:16px;margin:26px 0 10px 30px;}
@@ -33,63 +33,22 @@
 </style>
 
 <script type="text/javascript">
-
 $(document).ready(function() {
 	sprints = {{ sprints_json }}
 	for (i = 0; i < sprints.length; i++) {
 		load_sprint('{{ project.slug }}', sprints[i])
 	}
-
-	$(".description").hide();
-	
-	$(".toggledescription").click(function() {
-		var o = $(this);
-		$(this).parent().find(".description").toggle(0, function() {
-			if ($(this).is(":visible")) {
-				o.addClass("toggleback");
-				o.find("span").text("Ocultar");
-			} else {
-				o.removeClass("toggleback");
-				o.find("span").text("Exibir");
-			}
-			o.attr("title", o.text());
-		});
-	});
-
-	$(".sortable li h2").dblclick(function() {
-		$(this).parent().find(".toggledescription").click();
-	});
 });
-
-/*
-$(window).scroll(function() {
-	if (isBottom()) {
-		alert("chegou no fim.");
-	}
-});
-*/
-
-function isBottom() {
-	var scr;
-	var height = $(document).height() - $(window).height() - 50;
-
-	if (navigator.appName == "Microsoft Internet Explorer") {
-		scr = document.body.scrollTop;
-	} else {
-		scr = window.pageYOffset;
-	}
-	if (scr >= height) {
-	    return true;
-	}
-}
 </script>
 </head>
 <body>
 <div id="backlogagile">
 	{% for sprint in sprints %}
 	<div>
-		<div id="sprint_{{ sprint }}" class="sprint"></div>
-		<img class="loader" src="{{ MEDIA_URL }}backlog/img/loadinfo.gif" width="24" height="24" style="display: none;"/>
+		<div id="sprint_{{ sprint }}"></div>
+		<div class="sprint loader" style="display: none;">
+			<img src="{{ MEDIA_URL }}backlog/img/loadinfo.gif" width="24" height="24" />
+		</div>
 	</div>
 	{% endfor %}
 </div>
