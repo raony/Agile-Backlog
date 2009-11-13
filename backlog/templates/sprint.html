@@ -1,6 +1,4 @@
 <h1>{{ sprint }} - {{ sprint.goal }} - {{ sprint.load }}/{{ sprint.velocity }}</h1>
-
-<img class="loader" src="{{ MEDIA_URL }}backlog/img/loadinfo.gif" width="24" height="24" style="display:none;" />
 <ul class="sortable" id="sort_{{ sprint_num }}">
 	{% for item in sprint.items.all %}
 		<li class="ui-state-default" id="{{ item.id }}" style="display: none;" ></li>

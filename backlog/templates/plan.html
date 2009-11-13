@@ -87,7 +87,10 @@ function isBottom() {
 <body>
 <div id="backlogagile">
 	{% for sprint in sprints %}
-	<div id="sprint_{{ sprint }}" style="{% cycle 'odd' 'even' %}"></div>
+	<div>
+		<div id="sprint_{{ sprint }}" class="sprint"></div>
+		<img class="loader" src="{{ MEDIA_URL }}backlog/img/loadinfo.gif" width="24" height="24" style="display: none;"/>
+	</div>
 	{% endfor %}
 </div>
 </body>
