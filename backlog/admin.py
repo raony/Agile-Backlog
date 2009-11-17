@@ -16,7 +16,9 @@ class ProjectAdmin(admin.ModelAdmin):
             message_bit = "%s projects were planned." % queryset.count()
         self.message_user(request, message_bit)
 
+class ItemAdmin(admin.ModelAdmin):
+    list_display = ['__unicode__', 'description_trunc', 'sprint', 'project']
 
-admin.site.register(Item)
+admin.site.register(Item, ItemAdmin)
 admin.site.register(Sprint)
 admin.site.register(Project, ProjectAdmin)

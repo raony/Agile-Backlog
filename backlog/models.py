@@ -1,5 +1,7 @@
 from django.db import models
 from django.core.urlresolvers import reverse
+from django.utils.text import truncate_words
+
 # Create your models here.
 class Project(models.Model):
     name = models.CharField(max_length=250)
@@ -123,6 +125,9 @@ class Item(models.Model):
 
     def __unicode__(self):
         return self.summary
+
+    def description_trunc(self):
+        return truncate_words(self.description, 18)
     
     def previous(self):
         if Item.objects.filter(priority=self.priority-1):
