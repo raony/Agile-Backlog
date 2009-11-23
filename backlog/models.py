@@ -115,7 +115,7 @@ class Sprint(models.Model):
         unique_together = (('number', 'project'),)
 
 class Item(models.Model):
-    priority = models.PositiveIntegerField(null=True)
+    priority = models.PositiveIntegerField(null=True, blank=True)
     summary = models.CharField(max_length=250)
     description = models.TextField(null=True, blank=True)
     complexity = models.PositiveIntegerField(default=2)
