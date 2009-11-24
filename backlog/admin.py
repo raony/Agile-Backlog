@@ -17,7 +17,8 @@ class ProjectAdmin(admin.ModelAdmin):
         self.message_user(request, message_bit)
 
 class ItemAdmin(admin.ModelAdmin):
-    list_display = ['__unicode__', 'description_trunc', 'sprint', 'project']
+    list_display = ['__unicode__', 'complexity', 'description_trunc', 'sprint', 'project', ]
+    list_editable = ['complexity',]
 
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Sprint)
