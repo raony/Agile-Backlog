@@ -1,4 +1,4 @@
-<h1>{{ sprint }} {% if sprint.goal %}- {{ sprint.goal }}{% endif %}- {{ sprint.load }}/{{ sprint.velocity }}</h1>
+<h1>{{ sprint }} {% if sprint.goal %}- {{ sprint.goal }}{% endif %}{% if sprint.deadline %} - {{ sprint.deadline|date:"d M Y" }}{% endif%} - {{ sprint.load }}/{{ sprint.velocity }}</h1>
 <ul class="sortable sprint" id="sort_{{ sprint_num }}">
 	{% for item in sprint.items.all %}
 		<li class="ui-state-default" id="{{ item.id }}" style="display: none;" ></li>
