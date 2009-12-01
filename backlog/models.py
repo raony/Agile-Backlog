@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.urlresolvers import reverse
 from django.utils.text import truncate_words
+from django.utils.translation import ugettext as _
+
 
 # Create your models here.
 class Project(models.Model):
@@ -60,7 +62,7 @@ class Sprint(models.Model):
     project = models.ForeignKey(Project, related_name='sprints')
     
     def __unicode__(self):
-        return 'Sprint %d'%self.number
+        return _('Sprint %(number)d')%{'number':self.number}
     
     def load(self):
         return self.items.all().aggregate(total = models.Sum('complexity'))['total'] or 0
