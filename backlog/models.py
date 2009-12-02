@@ -61,6 +61,9 @@ class Sprint(models.Model):
     
     project = models.ForeignKey(Project, related_name='sprints')
     
+    def deadline_str(self):
+        return self.deadline.strftime("%d %b %Y")
+    
     def __unicode__(self):
         return _('Sprint %(number)d')%{'number':self.number}
     
